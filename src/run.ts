@@ -129,17 +129,26 @@ const WARMUP_RUNS = 10;
 
 export async function runLoop(
   provider: ProviderClient,
-  { runs, url, out }: { runs: number; url: string; out: string }
+  { runs, url, out, rate }: { runs: number; url: string; out: string; rate?: number }
 ) {
+  const minIntervalMs = rate ? (60 / rate) * 1000 : 0; // minimum ms between sessions
+  
+  if (rate) {
+    console.error(`[RATE_LIMIT] Throttling to ${rate} sessions/min (${(minIntervalMs / 1000).toFixed(1)}s interval)`);
+  }
+
   for (let i = 1; i <= WARMUP_RUNS; i++) {
+    const start = Date.now();
     console.error(`[WARMUP] ${i}/${WARMUP_RUNS}`);
     await runSingleSession(provider, url);
+    await throttle(start, minIntervalMs);
   }
 
   let success = 0;
   let failure = 0;
 
   for (let i = 1; i <= runs; i++) {
+    const start = Date.now();
     console.error(`[RUN] ${i}/${runs}`);
     const record = await runSingleSession(provider, url);
     fs.appendFileSync(out, JSON.stringify(record) + "\n", {
@@ -147,6 +156,16 @@ export async function runLoop(
     });
     if (record.success) success++;
     else failure++;
+    await throttle(start, minIntervalMs);
   }
   console.error(`Success: ${success}, Failure: ${failure}`);
+}
+
+async function throttle(startTime: number, minIntervalMs: number): Promise<void> {
+  if (minIntervalMs <= 0) return;
+  const elapsed = Date.now() - startTime;
+  const remaining = minIntervalMs - elapsed;
+  if (remaining > 0) {
+    await new Promise((r) => setTimeout(r, remaining));
+  }
 }

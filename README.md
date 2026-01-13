@@ -110,6 +110,7 @@ npm run bench -- --provider steel,kernel,browserbase,hyperbrowser,anchorbrowser 
 - **--runs**: number of measured iterations per provider. Default: `RUNS` env or `5`.
 - **--url**: first page to open (waits for `domcontentloaded`). Default: `URL` env or `https://google.com/`.
 - **--out**: output path. Default: `OUTPUT` env or `results/{provider}.jsonl`.
+- **--rate**: maximum sessions per minute (throttles to avoid overloading). Default: `RATE` env or unlimited.
 
 Behavioral details:
 
