@@ -19,8 +19,8 @@ These summary stats were computed from the sample 5,000‑run result files under
 
 |   Provider    | Avg (ms) | Median (ms) |  p95 (ms) |  p99 (ms) |
 | :-----------: | -------: | ----------: | --------: | --------: |
+|    KERNEL     |   793.84 |      776.00 |  1,006.00 |  1,105.00 |
 |     STEEL     |   894.13 |      867.00 |  1,090.00 |  1,340.05 |
-|    KERNEL     | 1,518.53 |    1,485.00 |  1,752.10 |  1,992.04 |
 |  BROWSERBASE  | 1,676.76 |    1,669.00 |  1,873.00 |  1,981.03 |
 | HYPERBROWSER  | 3,657.11 |    3,665.50 |  5,338.00 |  6,695.05 |
 | ANCHORBROWSER | 8,001.29 |    7,919.00 | 11,561.00 | 13,957.14 |
@@ -29,16 +29,16 @@ These summary stats were computed from the sample 5,000‑run result files under
 
 |   Provider    |   Create | Connect |     Goto |  Release | Create+Release | % of Total |
 | :-----------: | -------: | ------: | -------: | -------: | -------------: | ---------: |
+|    KERNEL     |    36.64 |  288.30 |   434.15 |    34.77 |       71.41 ms |       9.0% |
 |     STEEL     |   181.57 |  174.64 |   490.29 |    47.62 |      229.19 ms |      25.6% |
-|    KERNEL     |   261.10 |  428.90 |   533.95 |   294.57 |      555.67 ms |      36.6% |
-|  BROWSERBASE  |   188.18 |  517.37 |   792.27 |   178.99 |      367.17 ms |      21.9% |
+|  BROWSERBASE  |   188.18 |  517.37 |   792.27 |   178.94 |      367.12 ms |      21.9% |
 | HYPERBROWSER  | 1,731.63 |  347.60 |   377.89 | 1,199.98 |    2,931.61 ms |      80.2% |
 | ANCHORBROWSER | 3,796.55 |  184.29 | 1,259.66 | 2,760.79 |    6,557.34 ms |      82.0% |
 
 Reliability (5,000 attempts/provider):
 
-- Steel: 100% success (0 failures)
 - Kernel: 100% success (0 failures)
+- Steel: 100% success (0 failures)
 - Browserbase: 99.96% success (2 failures)
 - Hyperbrowser: 100% success (0 failures)
 - AnchorBrowser: 97.34% success (133 failures)
