@@ -3,7 +3,8 @@ export type ProviderName =
   | "BROWSERBASE"
   | "ANCHORBROWSER"
   | "HYPERBROWSER"
-  | "KERNEL";
+  | "KERNEL"
+  | "CLOUDFLARE";
 
 export type MetricRecord = {
   created_at: string;
@@ -21,6 +22,8 @@ export type MetricRecord = {
 export type ProviderSession = {
   id: string;
   cdpUrl: string;
+  /** Optional HTTP headers to send on the CDP WebSocket handshake (e.g. Bearer auth). */
+  headers?: Record<string, string>;
 };
 
 export interface ProviderClient {

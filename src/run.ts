@@ -10,6 +10,7 @@ export async function runSingleSession(
   let browser: Browser | null = null;
   let session: { id: string } | null = null;
   let stage = "init";
+  let sessionHeaders: Record<string, string> | undefined;
 
   const result: MetricRecord = {
     created_at: isoUtcNow(),
@@ -67,11 +68,15 @@ export async function runSingleSession(
       console.error(
         `[Session created] provider=${provider.name} id=${id} ${result.session_creation_ms}ms`
       );
+      sessionHeaders = created.headers;
     }
 
     stage = "connect_over_cdp";
     const t1 = nowNs();
-    browser = await chromium.connectOverCDP(cdpUrl);
+    browser = await chromium.connectOverCDP(
+      cdpUrl,
+      sessionHeaders ? { headers: sessionHeaders } : undefined
+    );
     result.session_connect_ms = msSince(t1);
     console.error(`[Browser connected] ${result.session_connect_ms}ms`);
 
@@ -94,7 +99,13 @@ export async function runSingleSession(
       try {
         stage = "session_release";
         const t3 = nowNs();
-        await provider.release(session.id);
+        // Cloudflare Browser Run has no control-plane release API; closing the
+        // CDP connection tears down the session server-side.
+        if (provider.name === "CLOUDFLARE" && browser) {
+          await browser.close();
+        } else {
+          await provider.release(session.id);
+        }
         result.session_release_ms = msSince(t3);
         console.error(`[Session released] ${result.session_release_ms}ms`);
       } catch (e: any) {
